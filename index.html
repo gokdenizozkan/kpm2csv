@@ -6,8 +6,12 @@
 </head>
 <body>
 <script src="js/parser.js"></script>
+
 <label for="input-text">PLAIN TEXT</label>
 <input id="input-text" type="file">
+
+<p id="csv"></p>
+
 <script>
     document.getElementById("input-text").addEventListener("input", (e) => {
         parseHelper(e.target.files[0]);

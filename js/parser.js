@@ -1,5 +1,7 @@
 class Website {
+    static type = "Website";
     static fieldNum = 6;
+    static csvHeaders = "title, website, username, password, notes";
     websiteName;
     websiteUrl;
     loginName;
@@ -21,10 +23,15 @@ class Website {
         this.password = stripped(this.password);
         this.comment = stripped(this.comment);
     }
+    toCsv() {
+        return `'${this.websiteName}','${this.websiteUrl}','${this.login}','${this.password}','${blankIfUndefined(this.comment)}'`;
+    }
 }
 
 class Application {
+    static type = "Application";
     static fieldNum = 5;
+    static csvHeaders = "title, website, username, password, notes";
     application;
     loginName;
     login;
@@ -44,10 +51,15 @@ class Application {
         this.password = stripped(this.password);
         this.comment = stripped(this.comment);
     }
+    toCsv() {
+        return `'${this.application}','--fill in--','${this.login}','${this.password}','${blankIfUndefined(this.comment)}'`;
+    }
 }
 
 class Other {
+    static type = "Other";
     static fieldNum = 5;
+    static csvHeaders = "title, website, username, password, notes";
     accountName;
     loginName;
     login;
@@ -67,10 +79,15 @@ class Other {
         this.password = stripped(this.password);
         this.comment = stripped(this.comment);
     }
+    toCsv() {
+        return `'${this.application}','--fill in--','${this.login}','${this.password}','${blankIfUndefined(this.comment)}'`;
+    }
 }
 
 class Note {
+    static type = "Note";
     static fieldNum = 2;
+    static csvHeaders = "title, text of note";
     name;
     text;
     setFieldsFromArray(arr) {
@@ -84,6 +101,13 @@ class Note {
         this.name = stripped(this.name);
         this.text = stripped(this.text);
     }
+    toCsv() {
+        return `${this.name}, ${this.text}`;
+    }
+}
+
+function blankIfUndefined(str) {
+    return str === undefined ? '' : str;
 }
 
 function stripped(field) {
@@ -93,8 +117,11 @@ function stripped(field) {
 function parseHelper(file) {
     const reader = new FileReader();
     reader.onload = (event) => {
-        console.log(parse(event.target.result));
-
+        let entries = parse(event.target.result);
+        let csv = toCsv(entries);
+        document.getElementById("csv").innerText = csv;
+        navigator.clipboard.writeText(csv);
+        alert("CSV copied to clipboard!");
     };
 
     reader.onerror = (event) => {
@@ -137,4 +164,10 @@ function parse(text) {
         entries.push(Object.assign(new entry.constructor(), entry));
     }
     return entries;
+}
+
+function toCsv(entries, typeToGenerate = Website.prototype) {
+    let csv = typeToGenerate.constructor.csvHeaders + "\n";
+    entries.filter(e => e.constructor.type === typeToGenerate.constructor.type).forEach(e => csv += e.toCsv() + "\n");
+    return csv;
 }
