@@ -90,11 +90,25 @@ function stripped(field) {
     return field.split(": ")[1];
 }
 
+function parseHelper(file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        console.log(parse(event.target.result));
+
+    };
+
+    reader.onerror = (event) => {
+        alert(event.target.error.name);
+    };
+
+    reader.readAsText(file);
+}
+
 function parse(text) {
     let blocks = text.split("\r\n---\r\n");
 
     let entries = [];
-    let entry;
+    let entry = null;
     for (const block of blocks) {
         let lines = block.split("\r\n");
         if (lines.length < 2) continue;
@@ -119,8 +133,8 @@ function parse(text) {
             }
             i = first ? i + 1 : i + 2;
         }
-        entry.setFieldsFromArray(lines.slice(i, lines.length))
-        entries.push(entry);
+        entry.setFieldsFromArray(lines.slice(i, lines.length));
+        entries.push(Object.assign(new entry.constructor(), entry));
     }
     return entries;
 }
