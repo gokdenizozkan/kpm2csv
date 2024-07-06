@@ -13,7 +13,6 @@ class Website {
         for (let i = Website.fieldNum; i < arr.length; i++) {
             this.comment += arr[i];
         }
-        console.log(arr);
         this.strip();
     }
     strip() {
@@ -122,7 +121,7 @@ function parseHelper(file) {
         let csv = toCsv(entries);
         document.getElementById("csv").innerText = csv;
         navigator.clipboard.writeText(csv);
-        alert("CSV copied to clipboard!");
+        forwardToDownload(csv);
     };
 
     reader.onerror = (event) => {
@@ -174,4 +173,15 @@ function toCsv(entries, typeToGenerate = Website.prototype) {
     let csv = typeToGenerate.constructor.csvHeaders + "\n";
     entries.filter(e => e.constructor.type === typeToGenerate.constructor.type).forEach(e => csv += e.toCsv() + "\n");
     return csv;
+}
+
+function forwardToDownload(data) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'kpm-export.csv';
+
+    a.click();
 }
