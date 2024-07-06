@@ -1,7 +1,7 @@
 class Website {
     static type = "Website";
     static fieldNum = 6;
-    static csvHeaders = "title, website, username, password, notes";
+    static csvHeaders = "title,website,username,password,notes";
     websiteName;
     websiteUrl;
     loginName;
@@ -24,14 +24,14 @@ class Website {
         this.comment = stripped(this.comment);
     }
     toCsv() {
-        return `'${this.websiteName}','${this.websiteUrl}','${this.login}','${this.password}','${blankIfUndefined(this.comment)}'`;
+        return `${surroundWithQuotes(this.websiteName)},${surroundWithQuotes(this.websiteUrl)},${surroundWithQuotes(this.login)},${surroundWithQuotes(this.password)},${surroundWithQuotes(blankIfUndefined(this.comment))}`;
     }
 }
 
 class Application {
     static type = "Application";
     static fieldNum = 5;
-    static csvHeaders = "title, website, username, password, notes";
+    static csvHeaders = "title,website,username,password,notes";
     application;
     loginName;
     login;
@@ -52,14 +52,14 @@ class Application {
         this.comment = stripped(this.comment);
     }
     toCsv() {
-        return `'${this.application}','--fill in--','${this.login}','${this.password}','${blankIfUndefined(this.comment)}'`;
+        return `${surroundWithQuotes(this.application)},${surroundWithQuotes(this.login)},${surroundWithQuotes(this.password)},${surroundWithQuotes(blankIfUndefined(this.comment))}`;
     }
 }
 
 class Other {
     static type = "Other";
     static fieldNum = 5;
-    static csvHeaders = "title, website, username, password, notes";
+    static csvHeaders = "title,website,username,password,notes";
     accountName;
     loginName;
     login;
@@ -80,14 +80,14 @@ class Other {
         this.comment = stripped(this.comment);
     }
     toCsv() {
-        return `'${this.application}','--fill in--','${this.login}','${this.password}','${blankIfUndefined(this.comment)}'`;
+        return `${surroundWithQuotes(this.application)},${surroundWithQuotes(this.login)},${surroundWithQuotes(this.password)},${surroundWithQuotes(blankIfUndefined(this.comment))}`;
     }
 }
 
 class Note {
     static type = "Note";
     static fieldNum = 2;
-    static csvHeaders = "title, text of note";
+    static csvHeaders = "title,text of note";
     name;
     text;
     setFieldsFromArray(arr) {
@@ -102,7 +102,7 @@ class Note {
         this.text = stripped(this.text);
     }
     toCsv() {
-        return `${this.name}, ${this.text}`;
+        return `${surroundWithQuotes(this.name)},${surroundWithQuotes(this.text)}`;
     }
 }
 
@@ -112,6 +112,23 @@ function blankIfUndefined(str) {
 
 function stripped(field) {
     return field.split(": ")[1];
+}
+
+function surroundWithQuotes(field) {
+    if (count(field, ",") < 1 && (field[0] !== "'" || field[0] !== '"')) {
+        return field;
+    }
+    if (count(field, '"') < 2) {
+        return `"${field}"`;
+    }
+    if (count(field, "'") < 2) {
+        return `'${field}'`;
+    }
+    return null;
+}
+
+function count(text, matcher) {
+    return (text.match(matcher)||[]).length;
 }
 
 function parseHelper(file) {
@@ -185,3 +202,7 @@ function forwardToDownload(data) {
 
     a.click();
 }
+
+document.getElementById("input-text").addEventListener("input", (e) => {
+    parseHelper(e.target.files[0]);
+});

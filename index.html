@@ -1,21 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <title>kpm2csv</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark" />
+    <title>kpm2csv by Gökdeniz Özkan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
 </head>
 <body>
+<main class="container">
+    <hgroup>
+        <h1>KPM Export -> CSV</h1>
+        <p>Convert your plain text Kaspersky Password Manager exports into CSV files so that you can import them into other password managers such as 1Password.</p>
+    </hgroup>
+    <article>
+        <header>
+            <h3><label for="input-text">Upload your plain text KPM export.</label></h3>
+            <p>Uploads and all operations done locally. See the source code!</p>
+        </header>
+        <input id="input-text" type="file">
+        <footer><p id="csv"></p></footer>
+    </article>
+
+</main>
 <script src="js/parser.js"></script>
-
-<label for="input-text">PLAIN TEXT</label>
-<input id="input-text" type="file">
-
-<p id="csv"></p>
-
-<script>
-    document.getElementById("input-text").addEventListener("input", (e) => {
-        parseHelper(e.target.files[0]);
-    });
-</script>
 </body>
 </html>
