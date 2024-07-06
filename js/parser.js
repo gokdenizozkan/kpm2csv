@@ -13,6 +13,7 @@ class Website {
         for (let i = Website.fieldNum; i < arr.length; i++) {
             this.comment += arr[i];
         }
+        console.log(arr);
         this.strip();
     }
     strip() {
@@ -160,7 +161,10 @@ function parse(text) {
             }
             i = first ? i + 1 : i + 2;
         }
-        entry.setFieldsFromArray(lines.slice(i, lines.length));
+
+        let elements = lines.slice(i, lines.length);
+        if (elements.length < 2) continue;
+        entry.setFieldsFromArray(elements);
         entries.push(Object.assign(new entry.constructor(), entry));
     }
     return entries;
