@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>kpm2csv by Gökdeniz Özkan</title>
+    <link rel="icon" type="image/x-icon" href="img/kpm2csv-icon.png">
     <link rel="stylesheet" href="css/bulma.min.wdarkly.css" />
 </head>
 <body>
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
+        <a class="navbar-item" href="index.html"><img src="img/kpm2csv-icon.png" width="75px" alt="kpm 2 csv converter icon that shows two documents, one having kaspersky logo on it and the other having CVS text on it, are connected with arrows"/></a>
         <a class="navbar-item" href="index.html">KPM-2-CSV Converter</a>
     </div>
 </nav>
@@ -16,7 +18,7 @@
 <main class="container">
     <section class="section is-small">
             <h1 class="title">Transfer Data From KPM to Others</h1>
-            <p class="subtitle">Convert your plain text Kaspersky Password Manager exports into CSV files so that you can import them into other password managers such as 1Password.</p>
+            <p class="subtitle">Convert your plain text Kaspersky Password Manager export data into CSV files so that you can import them into other password managers such as 1Password.</p>
     </section>
 
     <section id="upload-section" class="section">
@@ -61,20 +63,22 @@
         <h2 class="title">FAQ</h2>
         <details open>
             <summary><b>Is it safe?</b></summary>
-            <p>Yes. Every operation is done locally, and you can see it if it is the case by checking the source code of this website <a href="https://github.com/gokdenizozkan/kpm2csv">here</a>.</p>
+            <p>Yes. Every operation is done locally. See the <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">source code</a> and learn more about the entire process of conversion <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">here</a>.</p>
         </details>
         <hr />
         <details>
             <summary><b>How does it work?</b></summary>
             <p>
-                KPM exports do not adhere to any standards other password managers use. Instead, they use a plain text format with a unique template.
-                Because it is still a template, we can simply understand the rules of it and extract the data from that.
-                So:
+                KPM offers exporting your data into a plain text file with a unique format
+                that is not supported by any other password managers.
+                However, we can parse the data as the format has a pattern. And convert it to another format.
+
+                That is what we do here:
+                <ul>
+                    <li>1. Extract the data.</li>
+                    <li>2. Convert it to CSV.</li>
+                </ul>
             </p>
-            <ul>
-                <li>1. Extract data.</li>
-                <li>2. Convert it to CSV.</li>
-            </ul>
         </details>
         <hr />
         <details>
@@ -84,16 +88,13 @@
         <hr />
         <details>
             <summary><b>Which password managers support CSVs?</b></summary>
-            <p>Most probably, all. I, myself, wrote this entire site and converter for the sake of transferring my accounts from KPM to 1Password.</p>
+            <p>Almost all password managers support CSV format. You should be fine. I, for example, used it with 1Password.</p>
         </details>
     </section>
 
     <footer id="footer" class="footer">
         <div class="content has-text-centered">
-            <p>
-                Created by Gökdeniz Özkan<br>
-                The source code is licensed <a href="https://opensource.org/license/mit">MIT</a>.
-            </p>
+            <p>Created by <a href="https://linkedin.com/in/gokdenizozkan" target="_blank">Gökdeniz Özkan</a><br>The <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">source code</a> is licensed <a href="https://opensource.org/license/mit">MIT</a>.</p>
         </div>
     </footer>
 </main>
