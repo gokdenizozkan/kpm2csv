@@ -1,0 +1,391 @@
+/*! bulmaswatch v0.8.1 | MIT License */
+/*! bulma.io v0.8.1 | MIT License | github.com/jgthms/bulma */
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic&display=swap);
+
+.box:not(:last-child), .title:not(:last-child) {
+    margin-bottom: 1.5rem
+}
+
+/*! minireset.css v0.0.6 | MIT License | github.com/jgthms/minireset.css */
+
+body, h1, h2, hr, html, li, p, ul {
+    margin: 0;
+    padding: 0
+}
+
+h1, h2 {
+    font-size: 100%;
+    font-weight: 400
+}
+
+ul {
+    list-style: none
+}
+
+input {
+    margin: 0
+}
+
+html {
+    box-sizing: border-box;
+    background-color: #1f2424;
+    font-size: 15px;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    min-width: 300px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    text-rendering: optimizeLegibility;
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    text-size-adjust: 100%
+}
+
+*, ::after, ::before {
+    box-sizing: inherit
+}
+
+footer, section {
+    display: block
+}
+
+body, input {
+    font-family: "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", "Helvetica", "Arial", sans-serif
+}
+
+body {
+    font-weight: 400
+}
+
+body {
+    font-size: 1em;
+    line-height: 1.5;
+    color: #fff
+}
+
+a {
+    color: #1abc9c;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 200ms ease
+}
+
+a:hover {
+    color: #1dd2af
+}
+
+hr {
+    background-color: #282f2f
+}
+
+hr {
+    border: 0;
+    display: block;
+    margin: 1.5rem 0;
+    height: 2px
+}
+
+.has-text-centered {
+    text-align: center !important
+}
+
+.is-flex {
+    display: flex !important
+}
+
+.is-invisible {
+    visibility: hidden !important
+}
+
+.box {
+    background-color: #343c3d;
+    border-radius: 8px;
+    box-shadow: none;
+    color: #fff;
+    display: block;
+    padding: 1.25rem
+}
+
+.button.is-focused:not(:active), .button:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(26, 188, 156, .25)
+}
+
+.button.is-white.is-focused:not(:active), .button.is-white:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(255, 255, 255, .25)
+}
+
+.button.is-black.is-focused:not(:active), .button.is-black:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(10, 10, 10, .25)
+}
+
+.button.is-light.is-focused:not(:active), .button.is-light:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(236, 240, 241, .25)
+}
+
+.button.is-dark.is-focused:not(:active), .button.is-dark:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(40, 47, 47, .25)
+}
+
+.button.is-primary.is-focused:not(:active), .button.is-primary:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(55, 90, 127, .25)
+}
+
+.button.is-link.is-focused:not(:active), .button.is-link:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(26, 188, 156, .25)
+}
+
+.button.is-info.is-focused:not(:active), .button.is-info:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(50, 152, 220, .25)
+}
+
+.button.is-success.is-focused:not(:active), .button.is-success:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(46, 204, 113, .25)
+}
+
+.button.is-warning.is-focused:not(:active), .button.is-warning:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(241, 183, 14, .25)
+}
+
+.button.is-danger.is-focused:not(:active), .button.is-danger:focus:not(:active) {
+    box-shadow: 0 0 0 .125em rgba(231, 76, 60, .25)
+}
+
+.container {
+    flex-grow: 1;
+    margin: 0 auto;
+    position: relative;
+    width: auto
+}
+
+@media screen and (min-width: 1024px) {
+    .container {
+        max-width: 960px
+    }
+}
+
+@media screen and (min-width: 1216px) {
+    .container {
+        max-width: 1152px
+    }
+}
+
+@media screen and (min-width: 1408px) {
+    .container {
+        max-width: 1344px
+    }
+}
+
+.subtitle, .title {
+    word-break: break-word
+}
+
+/*.subtitle sub, .subtitle sup, .title sub, .title sup {*/
+/*    font-size: .75em*/
+/*}*/
+
+/*.subtitle .tag, .title .tag {*/
+/*    vertical-align: middle*/
+/*}*/
+
+.title {
+    color: #fff;
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.125
+}
+
+/*.subtitle:not(.is-spaced) + .title, .title:not(.is-spaced) + .subtitle {*/
+/*    margin-top: -1.25rem*/
+/*}*/
+
+/*.subtitle, .title.is-5 {*/
+/*    font-size: 1.25rem*/
+/*}*/
+
+.subtitle {
+    color: #8c9b9d;
+    font-weight: 400;
+    line-height: 1.25
+}
+
+.heading {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    text-transform: uppercase
+}
+
+.select.is-white:not(:hover)::after {
+    border-color: #fff
+}
+
+.select.is-black:not(:hover)::after {
+    border-color: #0a0a0a
+}
+
+.select.is-light:not(:hover)::after {
+    border-color: #ecf0f1
+}
+
+.select.is-dark:not(:hover)::after {
+    border-color: #282f2f
+}
+
+.select.is-primary:not(:hover)::after {
+    border-color: #375a7f
+}
+
+.select.is-link:not(:hover)::after {
+    border-color: #1abc9c
+}
+
+.select.is-info:not(:hover)::after {
+    border-color: #3298dc
+}
+
+.select.is-success:not(:hover)::after {
+    border-color: #2ecc71
+}
+
+.select.is-warning:not(:hover)::after {
+    border-color: #f1b70e
+}
+
+.select.is-danger:not(:hover)::after {
+    border-color: #e74c3c
+}
+
+.level {
+    align-items: center;
+    justify-content: space-between
+}
+
+@media screen and (min-width: 769px), print {
+    .level {
+        display: flex
+    }
+
+    .level > .level-item:not(.is-narrow) {
+        flex-grow: 1
+    }
+}
+
+.level-item {
+    align-items: center;
+    display: flex;
+    justify-content: center
+}
+
+.level-item .title {
+    margin-bottom: 0
+}
+
+@media screen and (max-width: 768px) {
+    .level-item:not(:last-child) {
+        margin-bottom: .75rem
+    }
+}
+
+.level-item {
+    flex-basis: auto;
+    flex-grow: 0;
+    flex-shrink: 0
+}
+
+.navbar {
+    background-color: #375a7f;
+    min-height: 4rem;
+    position: relative;
+    z-index: 30
+}
+
+.navbar-brand {
+    align-items: stretch;
+    display: flex;
+    flex-shrink: 0;
+    min-height: 4rem
+}
+
+.navbar-brand a.navbar-item:focus, .navbar-brand a.navbar-item:hover {
+    background-color: transparent
+}
+
+.navbar-item {
+    color: #fff;
+    display: block;
+    line-height: 1.5;
+    padding: .5rem .75rem;
+    position: relative
+}
+
+a.navbar-item {
+    cursor: pointer
+}
+
+a.navbar-item:focus, a.navbar-item:focus-within, a.navbar-item:hover {
+    background-color: transparent;
+    color: #1abc9c
+}
+
+.navbar-item {
+    flex-grow: 0;
+    flex-shrink: 0
+}
+
+@media screen and (max-width: 1023px) {
+
+    .navbar-brand .navbar-item {
+        align-items: center;
+        display: flex
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .navbar {
+        align-items: stretch;
+        display: flex
+    }
+
+    .navbar {
+        min-height: 4rem
+    }
+
+    .navbar-item {
+        align-items: center
+    }
+
+    .navbar-item {
+        display: flex
+    }
+
+    .navbar-link.is-active:not(:focus):not(:hover), a.navbar-item.is-active:not(:focus):not(:hover) {
+        background-color: transparent
+    }
+}
+
+.section {
+    padding: 3rem 1.5rem
+}
+
+@media screen and (min-width: 1024px) {
+    .section.is-medium {
+        padding: 9rem 1.5rem
+    }
+}
+
+.footer {
+    background-color: #282f2f;
+    padding: 3rem 1.5rem 6rem
+}
+
+.navbar {
+    border-radius: .4em
+}
+
+body > .navbar {
+    border-radius: 0
+}
+
+/*# sourceMappingURL=bulmaswatch.min.css.map */
