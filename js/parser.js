@@ -1,13 +1,8 @@
 class Website {
     static type = "Website";
     static fieldNum = 6;
-    static csvHeaders = "title,website,username,password,notes";
-    websiteName;
-    websiteUrl;
-    loginName;
-    login;
-    password;
-    comment;
+    static csvHeaders = "website-name,website-url,login-name,login,password,comment";
+    websiteName; websiteUrl; loginName; login; password; comment;
     setFieldsFromArray(arr) {
         [this.websiteName, this.websiteUrl, this.loginName, this.login, this.password, this.comment] = arr.slice(0, Website.fieldNum);
         for (let i = Website.fieldNum; i < arr.length; i++) {
@@ -24,19 +19,15 @@ class Website {
         this.comment = stripped(this.comment);
     }
     toCsv() {
-        return `${surroundWithQuotes(this.websiteName)},${surroundWithQuotes(this.websiteUrl)},${surroundWithQuotes(this.login)},${surroundWithQuotes(this.password)},${surroundWithQuotes(blankIfUndefined(this.comment))}`;
+        return `${surroundAndBlankify(this.websiteName)},${surroundAndBlankify(this.websiteUrl)},${surroundAndBlankify(this.loginName)},${surroundAndBlankify(this.login)},${surroundAndBlankify(this.password)},${surroundAndBlankify(this.comment)}`;
     }
 }
 
 class Application {
     static type = "Application";
     static fieldNum = 5;
-    static csvHeaders = "title,website,username,password,notes";
-    application;
-    loginName;
-    login;
-    password;
-    comment;
+    static csvHeaders = "application,login-name,login,password,comment";
+    application; loginName; login; password; comment;
     setFieldsFromArray(arr) {
         [this.application, this.loginName, this.login, this.password, this.comment] = arr.slice(0, Application.fieldNum);
         for (let i = Application.fieldNum; i < arr.length; i++) {
@@ -52,19 +43,15 @@ class Application {
         this.comment = stripped(this.comment);
     }
     toCsv() {
-        return `${surroundWithQuotes(this.application)},${surroundWithQuotes(this.login)},${surroundWithQuotes(this.password)},${surroundWithQuotes(blankIfUndefined(this.comment))}`;
+        return `${surroundAndBlankify(this.application)},${surroundAndBlankify(this.loginName)},${surroundAndBlankify(this.login)},${surroundAndBlankify(this.password)},${surroundAndBlankify(this.comment)}`;
     }
 }
 
 class Other {
     static type = "Other";
     static fieldNum = 5;
-    static csvHeaders = "title,website,username,password,notes";
-    accountName;
-    loginName;
-    login;
-    password;
-    comment;
+    static csvHeaders = "account-name,login-name,login,password,comment";
+    accountName; loginName; login; password; comment;
     setFieldsFromArray(arr) {
         [this.accountName, this.loginName, this.login, this.password, this.comment] = arr.slice(0, Other.fieldNum);
         for (let i = Other.fieldNum; i < arr.length; i++) {
@@ -80,16 +67,15 @@ class Other {
         this.comment = stripped(this.comment);
     }
     toCsv() {
-        return `${surroundWithQuotes(this.application)},${surroundWithQuotes(this.login)},${surroundWithQuotes(this.password)},${surroundWithQuotes(blankIfUndefined(this.comment))}`;
+        return `${surroundAndBlankify(this.application)},${surroundAndBlankify(this.loginName)},${surroundAndBlankify(this.login)},${surroundAndBlankify(this.password)},${surroundAndBlankify(this.comment)}`;
     }
 }
 
 class Note {
     static type = "Note";
     static fieldNum = 2;
-    static csvHeaders = "title,text of note";
-    name;
-    text;
+    static csvHeaders = "name,text";
+    name; text;
     setFieldsFromArray(arr) {
         [this.name, this.text] = arr.slice(0, Note.fieldNum);
         for (let i = Note.fieldNum; i < arr.length; i++) {
@@ -102,9 +88,11 @@ class Note {
         this.text = stripped(this.text);
     }
     toCsv() {
-        return `${surroundWithQuotes(this.name)},${surroundWithQuotes(this.text)}`;
+        return `${surroundAndBlankify(this.name)},${surroundAndBlankify(this.text)}`;
     }
 }
+
+const applicationTypes = [Website.type, Application.type, Other.type, Note.type];
 
 function blankIfUndefined(str) {
     return str === undefined ? '' : str;
@@ -127,6 +115,10 @@ function surroundWithQuotes(field) {
     return null;
 }
 
+function surroundAndBlankify(field) {
+    return surroundWithQuotes(blankIfUndefined(field));
+}
+
 function count(text, matcher) {
     return (text.match(matcher)||[]).length;
 }
@@ -135,10 +127,12 @@ function parseHelper(file) {
     const reader = new FileReader();
     reader.onload = (event) => {
         let entries = parse(event.target.result);
-        let csv = toCsv(entries);
-        document.getElementById("csv").innerText = csv;
-        navigator.clipboard.writeText(csv);
-        forwardToDownload(csv);
+        for (type of applicationTypes) {
+            if (entries.get(type).length <= 0) {
+                continue;
+            }
+            generateCsv(type, entries);
+        }
     };
 
     reader.onerror = (event) => {
@@ -151,7 +145,7 @@ function parseHelper(file) {
 function parse(text) {
     let blocks = text.split("\r\n---\r\n");
 
-    let entries = [];
+    const entries = new Map(); entries.set("Website", []); entries.set("Application", []); entries.set("Note", []); entries.set("Other", []);
     let entry = null;
     for (const block of blocks) {
         let lines = block.split("\r\n");
@@ -181,26 +175,39 @@ function parse(text) {
         let elements = lines.slice(i, lines.length);
         if (elements.length < 2) continue;
         entry.setFieldsFromArray(elements);
-        entries.push(Object.assign(new entry.constructor(), entry));
+        entries.get(entry.constructor.type).push(Object.assign(new entry.constructor(), entry));
     }
     return entries;
 }
 
 function toCsv(entries, typeToGenerate = Website.prototype) {
     let csv = typeToGenerate.constructor.csvHeaders + "\n";
-    entries.filter(e => e.constructor.type === typeToGenerate.constructor.type).forEach(e => csv += e.toCsv() + "\n");
+    entries.forEach(e => csv += e.toCsv() + "\n");
     return csv;
 }
 
-function forwardToDownload(data) {
-    const blob = new Blob([data], { type: 'text/csv' });
+function createFile(data) {
+    return new Blob([data], { type: 'text/csv' });
+}
+
+function mutateDownloadElement(blob, type) {
     const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
+    const a = document.getElementById(`${type}-download`);
     a.href = url;
-    a.download = 'kpm-export.csv';
+    a.download = `kpm-export-${type}.csv`;
+    a.classList.remove('is-invisible');
+    return a;
+}
 
-    a.click();
+function setEntryCount(type, entries) {
+    document.getElementById(type).children[1].innerHTML = entries.get(type).length;
+}
+
+function generateCsv(type, entries) {
+    let csv = toCsv(entries.get(type));
+    let blob = createFile(csv);
+    mutateDownloadElement(blob, type);
+    setEntryCount(type, entries);
 }
 
 document.getElementById("file-input").addEventListener("input", (e) => {
