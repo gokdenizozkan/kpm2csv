@@ -1,28 +1,103 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="light dark" />
     <title>kpm2csv by Gökdeniz Özkan</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.1/css/bulma.min.css" />
+    <link rel="stylesheet" href="css/darkly.css" />
 </head>
 <body>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="index.html">KPM-2-CSV Converter</a>
+    </div>
+</nav>
+
 <main class="container">
-    <hgroup>
-        <h1>KPM Export -> CSV</h1>
-        <p>Convert your plain text Kaspersky Password Manager exports into CSV files so that you can import them into other password managers such as 1Password.</p>
-    </hgroup>
-    <article>
-        <header>
-            <h3><label for="input-text">Upload your plain text KPM export.</label></h3>
-            <p>Uploads and all operations done locally. See the source code!</p>
-        </header>
-        <input id="input-text" type="file">
-        <footer><p id="csv"></p></footer>
-    </article>
+    <section class="section is-small">
+            <h1 class="title">Transfer Data From KPM to Others</h1>
+            <p class="subtitle">Convert your plain text Kaspersky Password Manager exports into CSV files so that you can import them into other password managers such as 1Password.</p>
+    </section>
+
+    <section id="upload-section" class="section">
+        <div class="box is-flex is-flex-direction-column is-align-items-center">
+            <label for="file-input">Upload your plain text KPM export:</label>
+            <input id="file-input" type="file" />
+        </div>
+
+        <div class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Websites</p>
+                    <p class="title">0</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Applications</p>
+                    <p class="title">0</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Notes</p>
+                    <p class="title">0</p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered">
+                <div>
+                    <p class="heading">Others</p>
+                    <p class="title">0</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="section is-medium">
+        <h2 class="title">FAQ</h2>
+        <details open>
+            <summary><b>Is it safe?</b></summary>
+            <p>Yes. Every operation is done locally, and you can see it if it is the case by checking the source code of this website <a href="https://github.com/gokdenizozkan/kpm2csv">here</a>.</p>
+        </details>
+        <hr />
+        <details>
+            <summary><b>How does it work?</b></summary>
+            <p>
+                KPM exports do not adhere to any standards other password managers use. Instead, they use a plain text format with a unique template.
+                Because it is still a template, we can simply understand the rules of it and extract the data from that.
+                So:
+            </p>
+            <ul>
+                <li>1. Extract data.</li>
+                <li>2. Convert it to CSV.</li>
+            </ul>
+        </details>
+        <hr />
+        <details>
+            <summary><b>What can I do with the resulting CSV?</b></summary>
+            <p>You may upload it to any other password manager service or keep it safe. CSV is a common, table-like standard and most services will support some sort of way of uploading a CSV file.</p>
+        </details>
+        <hr />
+        <details>
+            <summary><b>Which password managers support CSVs?</b></summary>
+            <p>Most probably, all. I, myself, wrote this entire site and converter for the sake of transferring my accounts from KPM to 1Password.</p>
+        </details>
+    </section>
+
+    <footer id="footer" class="footer">
+        <div class="content has-text-centered">
+            <p>
+                Created by Gökdeniz Özkan<br>
+                The source code is licensed <a href="https://opensource.org/license/mit">MIT</a>.
+            </p>
+        </div>
+    </footer>
+
+    <footer><p id="csv"></p></footer>
 
 </main>
 <script src="js/parser.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.15.1/cdn/shoelace-autoloader.js"></script>
 </body>
 </html>

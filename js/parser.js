@@ -203,6 +203,6 @@ function forwardToDownload(data) {
     a.click();
 }
 
-document.getElementById("input-text").addEventListener("input", (e) => {
+document.getElementById("file-input").addEventListener("input", (e) => {
     parseHelper(e.target.files[0]);
 });
