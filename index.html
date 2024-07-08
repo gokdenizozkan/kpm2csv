@@ -6,6 +6,14 @@
     <title>kpm2csv by Gökdeniz Özkan</title>
     <link rel="icon" type="image/x-icon" href="img/kpm2csv-icon.png">
     <link rel="stylesheet" href="css/bulma.min.wdarkly.css" />
+    <link rel="stylesheet" href="css/rainbow-text.css" />
+    <!-- Visitor Stat -->
+    <script>
+        function updateVisitorCount(response) {
+            document.getElementById('visits').innerText = response.value;
+        }
+    </script>
+    <script async src="https://abacus.jasoncameron.dev/hit/app.gokdenizozkan.com/kpm2csv-visits?callback=updateVisitorCount"></script>
 </head>
 <body>
 <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -21,7 +29,7 @@
             <p class="subtitle">Convert your plain text Kaspersky Password Manager export data into CSV files so that you can import them into other password managers such as 1Password.</p>
     </section>
 
-    <section id="upload-section" class="section">
+    <section id="upload-section" class="section is-medium">
         <div class="box is-flex is-flex-direction-column is-align-items-center">
             <label for="file-input">Upload your plain text KPM export:</label>
             <input id="file-input" type="file" />
@@ -94,7 +102,11 @@
 
     <footer id="footer" class="footer">
         <div class="content has-text-centered">
-            <p>Created by <a href="https://linkedin.com/in/gokdenizozkan" target="_blank">Gökdeniz Özkan</a><br>The <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">source code</a> is licensed <a href="https://opensource.org/license/mit">MIT</a>.</p>
+            <p>
+                <span class="rainbow rainbow_text_animated">Total visitor count is <span id="visits"></span>.</span><br>
+                Created by <a href="https://linkedin.com/in/gokdenizozkan" target="_blank">Gökdeniz Özkan</a><br>
+                The <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">source code</a> is licensed <a href="https://opensource.org/license/mit">MIT</a>.
+            </p>
         </div>
     </footer>
 </main>
