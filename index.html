@@ -3,113 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Convert Kaspersky Password Manager plain-text exports into import-ready CSV files directly in your browser.">
+    <meta name="color-scheme" content="light dark">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'self'; connect-src 'none'; font-src 'self'; form-action 'none'; object-src 'none'; frame-ancestors 'none'">
     <title>kpm2csv by Gökdeniz Özkan</title>
     <link rel="icon" type="image/x-icon" href="img/kpm2csv-icon.png">
-    <link rel="stylesheet" href="css/bulma.min.wdarkly.css" />
-    <link rel="stylesheet" href="css/rainbow-text.css" />
-    <!-- Visitor Stat -->
-    <script>
-        function updateVisitorCount(response) {
-            document.getElementById('visits').innerText = response.value;
-        }
-    </script>
-    <script async src="https://abacus.jasoncameron.dev/hit/app.gokdenizozkan.com/kpm2csv-visits?callback=updateVisitorCount"></script>
+    <link rel="stylesheet" href="sakura/sakura.css">
+    <link rel="stylesheet" href="muvazin.css">
+    <link rel="stylesheet" href="layout.css">
 </head>
 <body>
-<nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="index.html"><img src="img/kpm2csv-icon.png" width="75px" alt="kpm 2 csv converter icon that shows two documents, one having kaspersky logo on it and the other having CVS text on it, are connected with arrows"/></a>
-        <a class="navbar-item" href="index.html">KPM-2-CSV Converter</a>
-    </div>
-</nav>
+<main>
+    <header>
+        <h1 id="page-title">kpm2csv</h1>
+        <p>Convert a Kaspersky Password Manager export into CSV files without sending the export off the page.</p>
+    </header>
 
-<main class="container">
-    <section class="section is-small">
-            <h1 class="title">Transfer Data From KPM to Others</h1>
-            <p class="subtitle">Convert your plain text Kaspersky Password Manager export data into CSV files so that you can import them into other password managers such as 1Password.</p>
-    </section>
-
-    <section id="upload-section" class="section is-medium">
-        <div class="box is-flex is-flex-direction-column is-align-items-center">
-            <label for="file-input">Upload your plain text KPM export:</label>
-            <input id="file-input" type="file" />
-        </div>
-
-        <div class="level">
-            <div class="level-item has-text-centered">
-                <div id="Website">
-                    <p class="heading">Websites</p>
-                    <p class="title">0</p>
-                    <a id="Website-download" class="is-invisible">Download</a>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div id="Application">
-                    <p class="heading">Applications</p>
-                    <p class="title">0</p>
-                    <a id="Application-download" class="is-invisible">Download</a>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div id="Note">
-                    <p class="heading">Notes</p>
-                    <p class="title">0</p>
-                    <a id="Note-download" class="is-invisible">Download</a>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div id="Other">
-                    <p class="heading">Others</p>
-                    <p class="title">0</p>
-                    <a id="Other-download" class="is-invisible">Download</a>
-                </div>
+    <section class="upload" aria-labelledby="upload-title">
+        <div id="drop-zone" class="upload-panel" data-drag-active="false">
+            <h2 id="upload-title">Upload</h2>
+            <p class="upload-note">Choose or drop the plain-text KPM export. Parsing stays inside your browser session and the page loads no remote scripts.</p>
+            <label for="file-input">KPM export (.txt)</label>
+            <input id="file-input" type="file" accept=".txt,text/plain" aria-describedby="upload-help">
+            <p id="upload-help" class="upload-help">Supported groups: websites, applications, other accounts, and notes.</p>
+            <div class="upload-actions">
+                <button id="reset-button" type="button">Clear selection</button>
+                <span class="upload-hint">Or drag and drop a `.txt` export here.</span>
             </div>
         </div>
+
+        <noscript>
+            <p><strong>JavaScript is required.</strong></p>
+        </noscript>
     </section>
 
-    <section id="faq" class="section is-medium">
-        <h2 class="title">FAQ</h2>
-        <details open>
-            <summary><b>Is it safe?</b></summary>
-            <p>Yes. Every operation is done locally. See the <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">source code</a> and learn more about the entire process of conversion <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">here</a>.</p>
-        </details>
-        <hr />
-        <details>
-            <summary><b>How does it work?</b></summary>
-            <p>
-                KPM offers exporting your data into a plain text file with a unique format
-                that is not supported by any other password managers.
-                However, we can parse the data as the format has a pattern. And convert it to another format.
+    <section class="results" aria-labelledby="results-title">
+        <h2 id="results-title">Downloads</h2>
 
-                That is what we do here:
-                <ul>
-                    <li>1. Extract the data.</li>
-                    <li>2. Convert it to CSV.</li>
-                </ul>
-            </p>
-        </details>
-        <hr />
-        <details>
-            <summary><b>What can I do with the resulting CSV?</b></summary>
-            <p>You may upload it to any other password manager service or keep it safe. CSV is a common, table-like standard and most services will support some sort of way of uploading a CSV file.</p>
-        </details>
-        <hr />
-        <details>
-            <summary><b>Which password managers support CSVs?</b></summary>
-            <p>Almost all password managers support CSV format. You should be fine. I, for example, used it with 1Password.</p>
-        </details>
+        <article class="result" data-entry-type="Website" data-active="false">
+            <h3>Websites</h3>
+            <div class="result__meta">
+                <strong data-entry-count>0</strong>
+                <span data-entry-state>No entries.</span>
+            </div>
+            <a id="Website-download" class="download-button" data-entry-download hidden aria-disabled="true">Download CSV</a>
+        </article>
+
+        <article class="result" data-entry-type="Application" data-active="false">
+            <h3>Applications</h3>
+            <div class="result__meta">
+                <strong data-entry-count>0</strong>
+                <span data-entry-state>No entries.</span>
+            </div>
+            <a id="Application-download" class="download-button" data-entry-download hidden aria-disabled="true">Download CSV</a>
+        </article>
+
+        <article class="result" data-entry-type="Other" data-active="false">
+            <h3>Other Accounts</h3>
+            <div class="result__meta">
+                <strong data-entry-count>0</strong>
+                <span data-entry-state>No entries.</span>
+            </div>
+            <a id="Other-download" class="download-button" data-entry-download hidden aria-disabled="true">Download CSV</a>
+        </article>
+
+        <article class="result" data-entry-type="Note" data-active="false">
+            <h3>Notes</h3>
+            <div class="result__meta">
+                <strong data-entry-count>0</strong>
+                <span data-entry-state>No entries.</span>
+            </div>
+            <a id="Note-download" class="download-button" data-entry-download hidden aria-disabled="true">Download CSV</a>
+        </article>
     </section>
 
-    <footer id="footer" class="footer">
-        <div class="content has-text-centered">
-            <p>
-                <span class="rainbow rainbow_text_animated">Total visitor count is <span id="visits"></span>.</span><br>
-                Created by <a href="https://linkedin.com/in/gokdenizozkan" target="_blank">Gökdeniz Özkan</a><br>
-                The <a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank">source code</a> is licensed <a href="https://opensource.org/license/mit">MIT</a>.
-            </p>
-        </div>
+    <footer>
+        <p><small><a href="https://github.com/gokdenizozkan/kpm2csv" target="_blank" rel="noreferrer">Source</a> · Browser-only processing</small></p>
     </footer>
 </main>
+<aside id="upload-status" class="status-bar" data-state="idle">
+    <ul class="status-steps" aria-label="Status">
+        <li class="status-step" data-state="idle" data-active="true">Idle</li>
+        <li class="status-step" data-state="processing" data-active="false">Reading</li>
+        <li class="status-step" data-state="converted" data-active="false">Ready</li>
+        <li class="status-step" data-state="empty" data-active="false">Empty</li>
+        <li class="status-step" data-state="error" data-active="false">Error</li>
+    </ul>
+    <p class="status-summary" role="status" aria-live="polite">
+        <span id="status-title">Choose a file.</span>
+        <span id="status-message">Processed locally.</span>
+    </p>
+    <p class="status-file">
+        <small>File:</small>
+        <output id="selected-file">No file selected.</output>
+    </p>
+</aside>
+<script src="js/kpm-core.js"></script>
 <script src="js/parser.js"></script>
 </body>
 </html>

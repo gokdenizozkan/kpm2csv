@@ -1,40 +1,22 @@
 # Online KPM-2-CSV Converter
 
-Convert Kaspersky Password Manager exported credentials into CSV file, online. This converter supports 4 types of entries:
-- Website logins.
-- Application logins.
-- Custom logins (named as Other).
-- Secure notes.
-
-Converter is designed to handle all types of entries at once. Just grab your credentials export file, and upload it.
-
-<a href="https://app.gokdenizozkan.com/kpm2csv" target="_blank"><img alt="A screenshot of the webpage of the KPM 2 CSV conversion tool." src=".github/website.png" style="width: 1600px"/></a>
+Convert Kaspersky Password Manager plain-text exports into import-ready CSV files directly in the browser. The converter supports four record groups:
+- Website logins
+- Application logins
+- Other accounts
+- Secure notes
 
 ## How to use
 
-1. Export your credentials from KPM.
-2. Navigate to the [app.gokdenizozkan.com/kpm2csv](https://app.gokdenizozkan.com/kpm2csv) address.
-3. Upload the plain text file you got at point #1.
-4. Download the CSV file corresponding the entry types.
+1. Export your credentials from Kaspersky Password Manager as plain text.
+2. Open [app.gokdenizozkan.com/kpm2csv](https://app.gokdenizozkan.com/kpm2csv).
+3. Choose the export file or drag it onto the page.
+4. Review the detected categories and download only the CSV files you need.
 
-## Why bother to write a conversion tool
+## Privacy and safety
 
-I was using Kaspersky Password Manager, and wanted to switch to 1Password. However, KPM's export options were limited to text, which was unique to KPM and was not supported by any other tool.
+The app is a static site. Parsing happens entirely in the browser with no third-party scripts, so the exported credentials stay inside the local browser session.
 
-I found other conversion tools but they were either:
-1. Closed source, could not see the underlying code. (! No way I upload my passwords into that. !)
-2. Required me to build or clone the repository, while not offering a complete suite of solutions.
+## Why this exists
 
-Why not write my own conversion tool that would work on the Web thanks to HTML and JS with no expenses on my side (!), I told to myself. So, here I am, writing this README.md file.
-
-## Technologies used
-
-### Languages
-- HTML 5
-- JavaScript
-
-### Libraries^*
-- BULMA CSS Library
-- Darkly, a BULMA theme
-
-^* Unused CSS classes of both library and theme are removed.
+Kaspersky Password Manager exports to plain text, but that format is not directly importable by most password managers. Available solutions were either required installation, command line interface, or was closed source. This project aims to provide web based, secure, and open source solution for Kaspersky Password Manager users who seek to migrate their data to another product.
