@@ -1,215 +1,364 @@
-class Website {
-    static type = "Website";
-    static fieldNum = 6;
-    static csvHeaders = "website-name,website-url,login-name,login,password,comment";
-    websiteName; websiteUrl; loginName; login; password; comment;
-    setFieldsFromArray(arr) {
-        [this.websiteName, this.websiteUrl, this.loginName, this.login, this.password, this.comment] = arr.slice(0, Website.fieldNum);
-        for (let i = Website.fieldNum; i < arr.length; i++) {
-            this.comment += arr[i];
-        }
-        this.strip();
+const core = window.kpm2csvCore;
+const cardMessages = {
+    Website: {
+        empty: "entries.",
+        singular: "entry ready.",
+        plural: "entries ready."
+    },
+    Application: {
+        empty: "entries.",
+        singular: "entry ready.",
+        plural: "entries ready."
+    },
+    Other: {
+        empty: "entries.",
+        singular: "entry ready.",
+        plural: "entries ready."
+    },
+    Note: {
+        empty: "entries.",
+        singular: "entry ready.",
+        plural: "entries ready."
     }
-    strip() {
-        this.websiteName = stripped(this.websiteName);
-        this.websiteUrl = stripped(this.websiteUrl);
-        this.loginName = stripped(this.loginName);
-        this.login = stripped(this.login);
-        this.password = stripped(this.password);
-        this.comment = stripped(this.comment);
+};
+const statusBadges = {
+    idle: "Idle",
+    processing: "Reading",
+    converted: "Ready",
+    empty: "Empty",
+    error: "Error"
+};
+const entryTypes = core ? Array.from(core.entryTypeClasses.keys()) : Object.keys(cardMessages);
+const downloadUrls = new Map();
+let parseSequence = 0;
+let dragDepth = 0;
+
+const dom = {
+    fileInput: document.getElementById("file-input"),
+    resetButton: document.getElementById("reset-button"),
+    dropZone: document.getElementById("drop-zone"),
+    selectedFile: document.getElementById("selected-file"),
+    statusPanel: document.getElementById("upload-status"),
+    statusTitle: document.getElementById("status-title"),
+    statusMessage: document.getElementById("status-message"),
+    statusSteps: new Map(Object.keys(statusBadges).map((state) => [state, document.querySelector(`.status-step[data-state="${state}"]`)])),
+    resultCards: new Map(entryTypes.map((type) => {
+        const card = document.querySelector(`[data-entry-type="${type}"]`);
+        return [type, {
+            card,
+            count: card.querySelector("[data-entry-count]"),
+            state: card.querySelector("[data-entry-state]"),
+            download: card.querySelector("[data-entry-download]")
+        }];
+    }))
+};
+
+function forEachEntryType(callback) {
+    if (core) {
+        core.entryTypeClasses.forEach((entryClass, type) => {
+            callback(type, entryClass);
+        });
+        return;
     }
-    toCsv() {
-        return `${surroundAndBlankify(this.websiteName)},${surroundAndBlankify(this.websiteUrl)},${surroundAndBlankify(this.loginName)},${surroundAndBlankify(this.login)},${surroundAndBlankify(this.password)},${surroundAndBlankify(this.comment)}`;
-    }
-}
 
-class Application {
-    static type = "Application";
-    static fieldNum = 5;
-    static csvHeaders = "application,login-name,login,password,comment";
-    application; loginName; login; password; comment;
-    setFieldsFromArray(arr) {
-        [this.application, this.loginName, this.login, this.password, this.comment] = arr.slice(0, Application.fieldNum);
-        for (let i = Application.fieldNum; i < arr.length; i++) {
-            this.comment += arr[i];
-        }
-        this.strip();
-    }
-    strip() {
-        this.application = stripped(this.application);
-        this.loginName = stripped(this.loginName);
-        this.login = stripped(this.login);
-        this.password = stripped(this.password);
-        this.comment = stripped(this.comment);
-    }
-    toCsv() {
-        return `${surroundAndBlankify(this.application)},${surroundAndBlankify(this.loginName)},${surroundAndBlankify(this.login)},${surroundAndBlankify(this.password)},${surroundAndBlankify(this.comment)}`;
-    }
-}
-
-class Other {
-    static type = "Other";
-    static fieldNum = 5;
-    static csvHeaders = "account-name,login-name,login,password,comment";
-    accountName; loginName; login; password; comment;
-    setFieldsFromArray(arr) {
-        [this.accountName, this.loginName, this.login, this.password, this.comment] = arr.slice(0, Other.fieldNum);
-        for (let i = Other.fieldNum; i < arr.length; i++) {
-            this.comment += arr[i];
-        }
-        this.strip();
-    }
-    strip() {
-        this.accountName = stripped(this.accountName);
-        this.loginName = stripped(this.loginName);
-        this.login = stripped(this.login);
-        this.password = stripped(this.password);
-        this.comment = stripped(this.comment);
-    }
-    toCsv() {
-        return `${surroundAndBlankify(this.application)},${surroundAndBlankify(this.loginName)},${surroundAndBlankify(this.login)},${surroundAndBlankify(this.password)},${surroundAndBlankify(this.comment)}`;
-    }
-}
-
-class Note {
-    static type = "Note";
-    static fieldNum = 2;
-    static csvHeaders = "name,text";
-    name; text;
-    setFieldsFromArray(arr) {
-        [this.name, this.text] = arr.slice(0, Note.fieldNum);
-        for (let i = Note.fieldNum; i < arr.length; i++) {
-            this.text += "\n" + arr[i];
-        }
-        this.strip();
-    }
-    strip() {
-        this.name = stripped(this.name);
-        this.text = stripped(this.text);
-    }
-    toCsv() {
-        return `${surroundAndBlankify(this.name)},${surroundAndBlankify(this.text)}`;
-    }
-}
-
-const applicationTypes = [Website.type, Application.type, Other.type, Note.type];
-
-function blankIfUndefined(str) {
-    return str === undefined ? '' : str;
-}
-
-function stripped(field) {
-    return field.split(": ")[1];
-}
-
-function surroundWithQuotes(field) {
-    if (count(field, ",") < 1 && (field[0] !== "'" || field[0] !== '"')) {
-        return field;
-    }
-    if (count(field, '"') < 2) {
-        return `"${field}"`;
-    }
-    if (count(field, "'") < 2) {
-        return `'${field}'`;
-    }
-    return null;
-}
-
-function surroundAndBlankify(field) {
-    return surroundWithQuotes(blankIfUndefined(field));
-}
-
-function count(text, matcher) {
-    return (text.match(matcher)||[]).length;
-}
-
-function parseHelper(file) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        let entries = parse(event.target.result);
-        for (type of applicationTypes) {
-            if (entries.get(type).length <= 0) {
-                continue;
-            }
-            generateCsv(type, entries);
-        }
-    };
-
-    reader.onerror = (event) => {
-        alert(event.target.error.name);
-    };
-
-    reader.readAsText(file);
-}
-
-function parse(text) {
-    let blocks = text.split("\r\n---\r\n");
-
-    const entries = new Map(); entries.set("Website", []); entries.set("Application", []); entries.set("Note", []); entries.set("Other", []);
-    let entry = null;
-    for (const block of blocks) {
-        let lines = block.split("\r\n");
-        if (lines.length < 2) continue;
-
-        let i = 1;
-        if (lines[0] !== '' || (lines[0] === '' && lines[2] === '')) {
-            let first = lines[0] !== '';
-            let line = first ? lines[0] : lines[1];
-            switch (line) {
-                case "Websites":
-                    entry = new Website();
-                    break;
-                case "Applications":
-                    entry = new Application();
-                    break;
-                case "Other Accounts":
-                    entry = new Other();
-                    break;
-                case "Notes":
-                    entry = new Note();
-                    break;
-            }
-            i = first ? i + 1 : i + 2;
-        }
-
-        let elements = lines.slice(i, lines.length);
-        if (elements.length < 2) continue;
-        entry.setFieldsFromArray(elements);
-        entries.get(entry.constructor.type).push(Object.assign(new entry.constructor(), entry));
-    }
-    return entries;
-}
-
-function toCsv(entries, typeToGenerate = Website.prototype) {
-    let csv = typeToGenerate.constructor.csvHeaders + "\n";
-    entries.forEach(e => csv += e.toCsv() + "\n");
-    return csv;
+    entryTypes.forEach((type) => {
+        callback(type, null);
+    });
 }
 
 function createFile(data) {
-    return new Blob([data], { type: 'text/csv' });
+    return new Blob([data], { type: "text/csv;charset=utf-8" });
 }
 
-function mutateDownloadElement(blob, type) {
+function setStatus(state, title, message) {
+    dom.statusPanel.dataset.state = state;
+    dom.statusTitle.textContent = title;
+    dom.statusMessage.textContent = message;
+    dom.statusSteps.forEach((step, stepState) => {
+        step.dataset.active = String(stepState === state);
+    });
+}
+
+function setSelectedFile(fileName) {
+    dom.selectedFile.textContent = fileName;
+}
+
+function setDropZoneState(isActive) {
+    dom.dropZone.dataset.dragActive = String(isActive);
+}
+
+function revokeDownloadUrl(type) {
+    const currentUrl = downloadUrls.get(type);
+    if (!currentUrl) {
+        return;
+    }
+
+    URL.revokeObjectURL(currentUrl);
+    downloadUrls.delete(type);
+}
+
+function setResultCard(type, count, hasDownload) {
+    const cardUi = dom.resultCards.get(type);
+    const messageSet = cardMessages[type];
+    const isActive = count > 0;
+
+    cardUi.card.dataset.active = String(isActive);
+    cardUi.count.textContent = String(count);
+    cardUi.state.textContent = isActive
+        ? count === 1 ? messageSet.singular : messageSet.plural
+        : messageSet.empty;
+
+    if (!hasDownload) {
+        cardUi.download.hidden = true;
+        cardUi.download.removeAttribute("href");
+        cardUi.download.removeAttribute("download");
+        cardUi.download.setAttribute("aria-disabled", "true");
+        return;
+    }
+
+    cardUi.download.hidden = false;
+    cardUi.download.setAttribute("aria-disabled", "false");
+}
+
+function resetResults() {
+    forEachEntryType((type) => {
+        revokeDownloadUrl(type);
+        setResultCard(type, 0, false);
+    });
+}
+
+function resetInterface() {
+    resetResults();
+    setSelectedFile("No file selected.");
+    setStatus(
+        "idle",
+        "Choose a file.",
+        "Processed locally."
+    );
+}
+
+function sanitizeFileNamePart(fileName) {
+    return fileName
+        .replace(/\.[^.]+$/, "")
+        .replace(/[^a-z0-9]+/gi, "-")
+        .replace(/^-+|-+$/g, "")
+        .toLowerCase();
+}
+
+function buildDownloadName(fileName, type) {
+    const baseName = sanitizeFileNamePart(fileName) || "kpm-export";
+    return `${baseName}-${type.toLowerCase()}.csv`;
+}
+
+function setDownload(type, blob, fileName) {
+    const cardUi = dom.resultCards.get(type);
     const url = URL.createObjectURL(blob);
-    const a = document.getElementById(`${type}-download`);
-    a.href = url;
-    a.download = `kpm-export-${type}.csv`;
-    a.classList.remove('is-invisible');
-    return a;
+
+    revokeDownloadUrl(type);
+    downloadUrls.set(type, url);
+
+    cardUi.download.href = url;
+    cardUi.download.download = buildDownloadName(fileName, type);
 }
 
-function setEntryCount(type, entries) {
-    document.getElementById(type).children[1].innerHTML = entries.get(type).length;
+function renderEntries(entries, fileName) {
+    let totalEntries = 0;
+    let activeCategories = 0;
+
+    core.entryTypeClasses.forEach((entryClass, type) => {
+        const items = entries.get(type);
+        const count = items.length;
+        totalEntries += count;
+
+        if (count === 0) {
+            setResultCard(type, 0, false);
+            return;
+        }
+
+        activeCategories += 1;
+        const csv = core.toCsv(items, entryClass);
+        setDownload(type, createFile(csv), fileName);
+        setResultCard(type, count, true);
+    });
+
+    return { totalEntries, activeCategories };
 }
 
-function generateCsv(type, entries) {
-    let csv = toCsv(entries.get(type));
-    let blob = createFile(csv);
-    mutateDownloadElement(blob, type);
-    setEntryCount(type, entries);
+function isLikelyTextFile(file) {
+    return file.type === "" || file.type.startsWith("text/") || file.name.toLowerCase().endsWith(".txt");
 }
 
-document.getElementById("file-input").addEventListener("input", (e) => {
-    parseHelper(e.target.files[0]);
+function parseFile(file, sequence) {
+    if (!core) {
+        setStatus("error", "Parser unavailable.", "Reload the page and try again.");
+        return;
+    }
+
+    resetResults();
+    setSelectedFile(file.name);
+    setStatus("processing", "Reading file.", "Processing locally.");
+
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+        if (sequence !== parseSequence) {
+            return;
+        }
+
+        try {
+            const entries = core.parse(String(target.result || ""));
+            const { totalEntries, activeCategories } = renderEntries(entries, file.name);
+            if (totalEntries === 0) {
+                setStatus(
+                    "empty",
+                    "Nothing found.",
+                    "No supported entries in this file."
+                );
+                return;
+            }
+
+            setStatus(
+                "converted",
+                "Ready.",
+                `${totalEntries} entries in ${activeCategories} ${activeCategories === 1 ? "category" : "categories"}.`
+            );
+        } catch (error) {
+            console.error(error);
+            resetResults();
+            setStatus(
+                "error",
+                "Could not parse file.",
+                "Choose a plain-text KPM export."
+            );
+        }
+    };
+
+    reader.onerror = () => {
+        if (sequence !== parseSequence) {
+            return;
+        }
+
+        resetResults();
+        setStatus(
+            "error",
+            "Could not read file.",
+            "Try the export again."
+        );
+    };
+
+    reader.readAsText(file, "utf-8");
+}
+
+function handleFiles(fileList) {
+    const [file] = fileList || [];
+    parseSequence += 1;
+
+    if (!file) {
+        resetInterface();
+        return;
+    }
+
+    setSelectedFile(file.name);
+    resetResults();
+
+    if (!isLikelyTextFile(file)) {
+        setStatus(
+            "error",
+            "Unsupported file.",
+            "Choose a plain-text KPM export (.txt)."
+        );
+        return;
+    }
+
+    const sequence = parseSequence;
+    parseFile(file, sequence);
+}
+
+function handleFileSelection(event) {
+    handleFiles(event.target.files);
+}
+
+function syncInputFiles(fileList) {
+    if (!fileList || fileList.length === 0) {
+        return;
+    }
+
+    try {
+        dom.fileInput.files = fileList;
+        return;
+    } catch {
+    }
+
+    if (typeof DataTransfer !== "function") {
+        return;
+    }
+
+    try {
+        const transfer = new DataTransfer();
+        Array.from(fileList).forEach((file) => transfer.items.add(file));
+        dom.fileInput.files = transfer.files;
+    } catch {
+    }
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    dragDepth = 0;
+    setDropZoneState(false);
+    syncInputFiles(event.dataTransfer.files);
+    handleFiles(event.dataTransfer.files);
+}
+
+function handleDragEnter(event) {
+    if (!Array.from(event.dataTransfer?.types || []).includes("Files")) {
+        return;
+    }
+
+    event.preventDefault();
+    dragDepth += 1;
+    setDropZoneState(true);
+}
+
+function handleDragLeave(event) {
+    if (!Array.from(event.dataTransfer?.types || []).includes("Files")) {
+        return;
+    }
+
+    event.preventDefault();
+    dragDepth = Math.max(0, dragDepth - 1);
+    if (dragDepth === 0) {
+        setDropZoneState(false);
+    }
+}
+
+function handleDragOver(event) {
+    if (!Array.from(event.dataTransfer?.types || []).includes("Files")) {
+        return;
+    }
+
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+}
+
+function resetFileSelection() {
+    parseSequence += 1;
+    dom.fileInput.value = "";
+    dragDepth = 0;
+    setDropZoneState(false);
+    resetInterface();
+}
+
+dom.fileInput.addEventListener("change", handleFileSelection);
+dom.resetButton.addEventListener("click", resetFileSelection);
+dom.dropZone.addEventListener("dragenter", handleDragEnter);
+dom.dropZone.addEventListener("dragleave", handleDragLeave);
+dom.dropZone.addEventListener("dragover", handleDragOver);
+dom.dropZone.addEventListener("drop", handleDrop);
+window.addEventListener("beforeunload", () => {
+    forEachEntryType((type) => revokeDownloadUrl(type));
 });
+
+resetInterface();
+
+if (!core) {
+    setStatus("error", "Parser unavailable.", "Reload the page and try again.");
+}
